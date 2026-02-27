@@ -1,4 +1,3 @@
-// models/Hotel.js
 const mongoose = require('mongoose');
 
 const HotelSchema = new mongoose.Schema({
@@ -38,10 +37,10 @@ const HotelSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-// Reverse populate with virtuals (ชื่อ ref ต้องตรงกับ model ของ booking)
+
 HotelSchema.virtual('bookings', {
   ref: 'Booking',
-  localField: '_id',      // ไม่ใช่ ' id' หรือ 'id'
+  localField: '_id',      
   foreignField: 'hotel',
   justOne: false
 });

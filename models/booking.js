@@ -1,4 +1,3 @@
-// models/Booking.js
 const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
@@ -10,7 +9,7 @@ const BookingSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please add number of nights'],
     min: [1, 'Nights must be at least 1'],
-    max: [3, 'Nights can not be more than 3'] // enforce requirement
+    max: [3, 'Nights can not be more than 3'] 
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

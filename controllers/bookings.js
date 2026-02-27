@@ -91,8 +91,8 @@ exports.createBooking = async (req, res, next) => {
         message: `User ${req.user.id} already has 3 bookings`
       });
     }
+// ??
 
-    // จำกัดไม่เกิน 3 คืน 💥 (requirement ใหม่)
     if (req.body.nights > 3) {
       return res.status(400).json({
         success: false,

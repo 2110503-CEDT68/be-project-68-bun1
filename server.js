@@ -6,7 +6,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
-// const mongoSanitize = require('express-mongo-sanitize'); // optional
+const mongoSanitize = require('express-mongo-sanitize'); // optional
 const helmet = require('helmet');
 const { xss } = require('express-xss-sanitizer');
 const rateLimit = require('express-rate-limit');
@@ -48,7 +48,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Security middlewares
-// app.use(mongoSanitize()); // enable if package installed
+app.use(mongoSanitize()); // enable if package installed
 app.use(helmet());
 app.use(xss());
 

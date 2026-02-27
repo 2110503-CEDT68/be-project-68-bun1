@@ -113,7 +113,7 @@ exports.deleteHotel = async (req, res, next) => {
       });
     }
 
-    // ลบ bookings ที่ผูกกับ hotel
+
     await Booking.deleteMany({ hotel: req.params.id });
 
     await hotel.deleteOne();

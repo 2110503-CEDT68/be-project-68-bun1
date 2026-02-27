@@ -1,7 +1,7 @@
-// routes/booking.js
 const express = require('express');
 const {
   getBookings,
+  getBooking,
   createBooking,
   updateBooking,
   deleteBooking
@@ -19,6 +19,7 @@ router
 
 router
   .route('/:id')
+  .get(protect, getBooking)
   .put(protect, updateBooking)
   .delete(protect, deleteBooking);
 
