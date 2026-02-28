@@ -1,0 +1,780 @@
+{
+  "info": {
+    "_postman_id": "c54386b7-e4cf-48ea-8c0c-389161b7df29",
+    "name": "Bun1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login admin - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set('Admin', pm.response.json().token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/login",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register user - status 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('User', jsonData.token);",
+                  "pm.collectionVariables.set('user_id', jsonData.data._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"telephone\": \"{{$randomPhoneNumber}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/register",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET me",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('GET me - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('GET me - has user data', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.eql(true);",
+                  "    pm.expect(jsonData.data).to.have.property('name');",
+                  "    pm.expect(jsonData.data).to.have.property('email');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/me",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register second user (for role test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Register second user - status 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('second_user_id', jsonData.data._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"telephone\": \"{{$randomPhoneNumber}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/register",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin - Promote user to admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Promote user to admin - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Promote user - role is admin', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.role).to.eql('admin');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"admin\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/users/{{second_user_id}}/role",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "auth", "users", "{{second_user_id}}", "role"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Hotel",
+      "item": [
+        {
+          "name": "GET all hotels",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('GET all hotels - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/api/v1/hotels",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "hotels"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST hotel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('POST hotel - status 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('hotel_id', jsonData.data._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomCompanyName}}\",\n    \"address\": \"123 Sukhumvit Road\",\n    \"district\": \"Watthana\",\n    \"province\": \"Bangkok\",\n    \"postalcode\": \"10110\",\n    \"tel\": \"02-123-4567\",\n    \"region\": \"Central Thailand\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{URL}}/api/v1/hotels",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "hotels"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET single hotel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('GET single hotel - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('GET single hotel - correct id', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data._id).to.eql(pm.collectionVariables.get('hotel_id'));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "hotels", "{{hotel_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT single hotel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('PUT hotel - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('PUT hotel - postalcode updated', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.postalcode).to.eql('67676');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"postalcode\": \"67676\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "hotels", "{{hotel_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE hotel - Non-admin (negative test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('DELETE hotel non-admin - status 401 or 403', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([401, 403, 400]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "hotels", "{{hotel_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Booking",
+      "item": [
+        {
+          "name": "User",
+          "item": [
+            {
+              "name": "POST booking (user)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('POST booking - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.collectionVariables.set('booking_id', pm.response.json().data._id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"startDate\": \"2026-06-15\",\n    \"nights\": 2\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}/bookings",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "hotels", "{{hotel_id}}", "bookings"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET user bookings",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('GET user bookings - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test('GET user bookings - count >= 1', function () {",
+                      "    pm.expect(pm.response.json().count).to.be.at.least(1);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{URL}}/api/v1/bookings",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "bookings"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "PUT booking (user)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('PUT booking - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test('PUT booking - nights updated', function () {",
+                      "    pm.expect(pm.response.json().data.nights).to.eql(1);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nights\": 1\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE booking (user)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('DELETE booking - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Admin",
+          "item": [
+            {
+              "name": "POST booking for admin test",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('POST booking for admin test - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.collectionVariables.set('booking_id', pm.response.json().data._id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"startDate\": \"2026-07-20\",\n    \"nights\": 1\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}/bookings",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "hotels", "{{hotel_id}}", "bookings"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET all bookings (admin)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('GET all bookings admin - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test('GET all bookings admin - count >= 1', function () {",
+                      "    pm.expect(pm.response.json().count).to.be.at.least(1);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{URL}}/api/v1/bookings",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "bookings"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "PUT booking (admin)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('PUT booking admin - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "pm.test('PUT booking admin - nights updated', function () {",
+                      "    pm.expect(pm.response.json().data.nights).to.eql(3);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"nights\": 3\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE booking (admin)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('DELETE booking admin - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET bookings by hotel (admin)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('GET bookings by hotel admin - status 200', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}/bookings",
+                  "host": ["{{URL}}"],
+                  "path": ["api", "v1", "hotels", "{{hotel_id}}", "bookings"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET all bookings (final check)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('GET all bookings final - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/api/v1/bookings",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "bookings"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Logout",
+      "item": [
+        {
+          "name": "Logout user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Logout - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/logout",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Logout admin - status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/logout",
+              "host": ["{{URL}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "Admin", "value": "" },
+    { "key": "User", "value": "" },
+    { "key": "user_id", "value": "" },
+    { "key": "second_user_id", "value": "" },
+    { "key": "hotel_id", "value": "" },
+    { "key": "booking_id", "value": "" }
+  ]
+}

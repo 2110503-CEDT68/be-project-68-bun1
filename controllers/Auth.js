@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 exports.register = async (req, res, next) => {
   try {
-    const { name, telephone, email, password, role } = req.body;
+    const { name, telephone, email, password } = req.body;
 
     if (!name || !telephone || !email || !password) {
       return res.status(400).json({
@@ -15,11 +15,10 @@ exports.register = async (req, res, next) => {
       name,
       telephone,
       email,
-      password,
-      role
+      password
     });
 
-    sendTokenResponse(user, 200, res);
+    sendTokenResponse(user, 201, res);
 
   } catch (err) {
     console.log(err.stack);
@@ -71,7 +70,14 @@ const sendTokenResponse=(user, statusCode, res)=>{
     }
     res.status(statusCode).cookie('token',token,option).json({
         success: true,
-        token
+        token,
+        data: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            telephone: user.telephone,
+            role: user.role
+        }
     })
 }
 //At the end of file
@@ -83,6 +89,40 @@ exports.getMe=async(req, res,next)=>{
     res.status (200).json({
         success:true,data:user
     });
+};
+
+exports.updateUserRole=async(req,res,next)=>{
+    try {
+        const { role } = req.body;
+
+        if (!role || !['user','admin'].includes(role)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide a valid role (user or admin)'
+            });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { role },
+            { new: true, runValidators: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: `No user with id ${req.params.id}`
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (err) {
+        console.log(err.stack);
+        res.status(400).json({ success: false });
+    }
 };
 
 exports.logout=async(req,res,next)=>{
