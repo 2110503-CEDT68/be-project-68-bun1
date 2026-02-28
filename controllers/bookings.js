@@ -84,7 +84,6 @@ exports.createBooking = async (req, res, next) => {
 
     const existedBookings = await Booking.find({ user: req.user.id });
 
-    // จำกัดจำนวน booking (ตาม logic เดิมพี่)
     if (existedBookings.length >= 3 && req.user.role !== 'admin') {
       return res.status(400).json({
         success: false,
