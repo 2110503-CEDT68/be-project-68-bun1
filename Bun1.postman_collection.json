@@ -1,8 +1,10 @@
 {
   "info": {
-    "_postman_id": "c54386b7-e4cf-48ea-8c0c-389161b7df29",
+    "_postman_id": "6181c349-aeff-439e-a0d2-803c4bd7a063",
     "name": "Bun1",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52476907",
+    "_collection_link": "https://go.postman.co/collection/52476907-6181c349-aeff-439e-a0d2-803c4bd7a063?source=collection_link"
   },
   "item": [
     {
@@ -18,25 +20,43 @@
                   "pm.test('Login admin - status 200', function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
-                  "pm.collectionVariables.set('Admin', pm.response.json().token);"
+                  "",
+                  "const jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"TOKEN\", jsonData.token);",
+                  "pm.collectionVariables.set(\"Admin\", jsonData.token);"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"12345678\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"12345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{URL}}/api/v1/auth/login",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "auth", "login"]
+              "raw": "http://localhost:5003/api/v1/auth/login",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -53,25 +73,42 @@
                   "});",
                   "var jsonData = pm.response.json();",
                   "pm.collectionVariables.set('User', jsonData.token);",
-                  "pm.collectionVariables.set('user_id', jsonData.data._id);"
+                  "pm.collectionVariables.set('user_id', jsonData.data._id);",
+                  "pm.collectionVariables.set(\"TOKEN\", jsonData.token);",
+                  "pm.collectionVariables.set(\"User\", jsonData.token);"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"telephone\": \"{{$randomPhoneNumber}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"12345678\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{URL}}/api/v1/auth/register",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "auth", "register"]
+              "raw": "http://localhost:5003/api/v1/auth/register",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
             }
           },
           "response": []
@@ -93,21 +130,36 @@
                   "    pm.expect(jsonData.data).to.have.property('email');",
                   "});"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{URL}}/api/v1/auth/me",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "auth", "me"]
+              "raw": "http://localhost:5003/api/v1/auth/me",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
             }
           },
           "response": []
@@ -130,18 +182,31 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"telephone\": \"{{$randomPhoneNumber}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"12345678\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{URL}}/api/v1/auth/register",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "auth", "register"]
+              "raw": "http://localhost:5003/api/v1/auth/register",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
             }
           },
           "response": []
@@ -168,19 +233,38 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"role\": \"admin\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{URL}}/api/v1/auth/users/{{second_user_id}}/role",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "auth", "users", "{{second_user_id}}", "role"]
+              "raw": "http://localhost:5003/api/v1/auth/users/{{second_user_id}}/role",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "users",
+                "{{second_user_id}}",
+                "role"
+              ]
             }
           },
           "response": []
@@ -209,9 +293,15 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{URL}}/api/v1/hotels",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "hotels"]
+              "raw": "http://localhost:5003/api/v1/hotels",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hotels"
+              ]
             }
           },
           "response": []
@@ -236,19 +326,35 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"name\": \"{{$randomCompanyName}}\",\n    \"address\": \"123 Sukhumvit Road\",\n    \"district\": \"Watthana\",\n    \"province\": \"Bangkok\",\n    \"postalcode\": \"10110\",\n    \"tel\": \"02-123-4567\",\n    \"region\": \"Central Thailand\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{URL}}/api/v1/hotels",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "hotels"]
+              "raw": "http://localhost:5003/api/v1/hotels",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hotels"
+              ]
             }
           },
           "response": []
@@ -276,9 +382,16 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "hotels", "{{hotel_id}}"]
+              "raw": "http://localhost:5003/api/v1/hotels/{{hotel_id}}",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hotels",
+                "{{hotel_id}}"
+              ]
             }
           },
           "response": []
@@ -305,19 +418,36 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n    \"postalcode\": \"67676\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "hotels", "{{hotel_id}}"]
+              "raw": "http://localhost:5003/api/v1/hotels/{{hotel_id}}",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hotels",
+                "{{hotel_id}}"
+              ]
             }
           },
           "response": []
@@ -340,14 +470,27 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{User}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "hotels", "{{hotel_id}}"]
+              "raw": "http://localhost:5003/api/v1/hotels/{{hotel_id}}",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hotels",
+                "{{hotel_id}}"
+              ]
             }
           },
           "response": []
@@ -379,19 +522,37 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{User}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n    \"startDate\": \"2026-06-15\",\n    \"nights\": 2\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
-                  "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}/bookings",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "hotels", "{{hotel_id}}", "bookings"]
+                  "raw": "http://localhost:5003/api/v1/hotels/{{hotel_id}}/bookings",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "hotels",
+                    "{{hotel_id}}",
+                    "bookings"
+                  ]
                 }
               },
               "response": []
@@ -417,14 +578,26 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{User}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{URL}}/api/v1/bookings",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "bookings"]
+                  "raw": "http://localhost:5003/api/v1/bookings",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings"
+                  ]
                 }
               },
               "response": []
@@ -450,19 +623,36 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{User}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "PUT",
                 "header": [],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n    \"nights\": 1\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
-                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                  "raw": "http://localhost:5003/api/v1/bookings/{{booking_id}}",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings",
+                    "{{booking_id}}"
+                  ]
                 }
               },
               "response": []
@@ -485,14 +675,27 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{User}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                  "raw": "http://localhost:5003/api/v1/bookings/{{booking_id}}",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings",
+                    "{{booking_id}}"
+                  ]
                 }
               },
               "response": []
@@ -514,26 +717,46 @@
                       "});",
                       "pm.collectionVariables.set('booking_id', pm.response.json().data._id);"
                     ],
-                    "type": "text/javascript"
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
                   }
                 }
               ],
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Admin}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n    \"startDate\": \"2026-07-20\",\n    \"nights\": 1\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
-                  "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}/bookings",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "hotels", "{{hotel_id}}", "bookings"]
+                  "raw": "http://localhost:5003/api/v1/hotels/{{hotel_id}}/bookings",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "hotels",
+                    "{{hotel_id}}",
+                    "bookings"
+                  ]
                 }
               },
               "response": []
@@ -559,14 +782,26 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Admin}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{URL}}/api/v1/bookings",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "bookings"]
+                  "raw": "http://localhost:5003/api/v1/bookings",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings"
+                  ]
                 }
               },
               "response": []
@@ -592,19 +827,36 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Admin}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "PUT",
                 "header": [],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n    \"nights\": 3\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
-                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                  "raw": "http://localhost:5003/api/v1/bookings/{{booking_id}}",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings",
+                    "{{booking_id}}"
+                  ]
                 }
               },
               "response": []
@@ -627,14 +879,27 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Admin}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{URL}}/api/v1/bookings/{{booking_id}}",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "bookings", "{{booking_id}}"]
+                  "raw": "http://localhost:5003/api/v1/bookings/{{booking_id}}",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings",
+                    "{{booking_id}}"
+                  ]
                 }
               },
               "response": []
@@ -657,14 +922,28 @@
               "request": {
                 "auth": {
                   "type": "bearer",
-                  "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Admin}}",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{URL}}/api/v1/hotels/{{hotel_id}}/bookings",
-                  "host": ["{{URL}}"],
-                  "path": ["api", "v1", "hotels", "{{hotel_id}}", "bookings"]
+                  "raw": "http://localhost:5003/api/v1/hotels/{{hotel_id}}/bookings",
+                  "host": [
+                    "http://localhost:5003"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "hotels",
+                    "{{hotel_id}}",
+                    "bookings"
+                  ]
                 }
               },
               "response": []
@@ -682,21 +961,35 @@
                   "    pm.response.to.have.status(200);",
                   "});"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{URL}}/api/v1/bookings",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "bookings"]
+              "raw": "http://localhost:5003/api/v1/bookings",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "bookings"
+              ]
             }
           },
           "response": []
@@ -715,23 +1008,42 @@
                 "exec": [
                   "pm.test('Logout - status 200', function () {",
                   "    pm.response.to.have.status(200);",
-                  "});"
+                  "});",
+                  "pm.collectionVariables.set(\"TOKEN\", null);",
+                  "pm.collectionVariables.set(\"User\", null);",
+                  "",
+                  ""
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{User}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{User}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{URL}}/api/v1/auth/logout",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "auth", "logout"]
+              "raw": "http://localhost:5003/api/v1/auth/logout",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
             }
           },
           "response": []
@@ -745,23 +1057,40 @@
                 "exec": [
                   "pm.test('Logout admin - status 200', function () {",
                   "    pm.response.to.have.status(200);",
-                  "});"
+                  "});",
+                  "pm.collectionVariables.set(\"TOKEN\", null);",
+                  "pm.collectionVariables.set(\"Admin\", null);"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{Admin}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{URL}}/api/v1/auth/logout",
-              "host": ["{{URL}}"],
-              "path": ["api", "v1", "auth", "logout"]
+              "raw": "http://localhost:5003/api/v1/auth/logout",
+              "host": [
+                "http://localhost:5003"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
             }
           },
           "response": []
@@ -770,11 +1099,29 @@
     }
   ],
   "variable": [
-    { "key": "Admin", "value": "" },
-    { "key": "User", "value": "" },
-    { "key": "user_id", "value": "" },
-    { "key": "second_user_id", "value": "" },
-    { "key": "hotel_id", "value": "" },
-    { "key": "booking_id", "value": "" }
+    {
+      "key": "Admin",
+      "value": ""
+    },
+    {
+      "key": "User",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": ""
+    },
+    {
+      "key": "second_user_id",
+      "value": ""
+    },
+    {
+      "key": "hotel_id",
+      "value": ""
+    },
+    {
+      "key": "booking_id",
+      "value": ""
+    }
   ]
 }
