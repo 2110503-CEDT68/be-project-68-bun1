@@ -8,13 +8,11 @@ const {
 } = require('../controllers/bookings');
 
 const { protect, authorize } = require('../middleware/auth');
-
-// IMPORTANT: need mergeParams to access req.params.hotelId when nested under /hotels/:hotelId/bookings
 const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
-  .get(protect, getBookings)
+  .get(protect, authorize('admin') , getBookings)
   .post(protect, createBooking);
 
 router

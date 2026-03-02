@@ -25,5 +25,4 @@ router
   .get(getHotel)
   .put(protect, authorize('admin'), updateHotel)
   .delete(protect, authorize('admin'), deleteHotel);
-
 module.exports = router;

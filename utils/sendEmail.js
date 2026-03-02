@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -28,7 +27,6 @@ const sendEmail = async (to, subject, html) => {
     return info;
   } catch (error) {
     console.error('Email send error:', error.message);
-    // Don't throw — email failure shouldn't break the API response
   }
 };
 

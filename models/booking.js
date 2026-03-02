@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const BookingSchema = new mongoose.Schema({
   startDate: {
     type: Date,
@@ -26,5 +25,4 @@ const BookingSchema = new mongoose.Schema({
     default: Date.now
   }
 });
-
 module.exports = mongoose.model('Booking', BookingSchema);

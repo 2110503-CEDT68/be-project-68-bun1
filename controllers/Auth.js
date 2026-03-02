@@ -48,7 +48,6 @@ User.findOne({email}).select('+password');
         return res.status (400).json ({success:false,msg:'Invalid credentials'});
     }
 
-    
     const isMatch = await user.matchPassword(password);
 
     if(!isMatch){
@@ -67,7 +66,6 @@ User.findOne({email}).select('+password');
         return res.status(401).json({success:false,msg:'Cannot convert email or password to string'});
     }
 };
-
 
 const sendTokenResponse=(user, statusCode, res)=>{
     

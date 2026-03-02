@@ -84,11 +84,6 @@ exports.createBooking = async (req, res, next) => {
 
     req.body.user = req.user.id;
 
-    const existedBookings = await Booking.find({ user: req.user.id });
-
-
-// ??
-
     if (req.body.nights > 3) {
       return res.status(400).json({
         success: false,
@@ -182,7 +177,6 @@ exports.updateBooking = async (req, res, next) => {
     });
   }
 };
-
 exports.deleteBooking = async (req, res, next) => {
   try {
     const booking = await Booking.findById(req.params.id);

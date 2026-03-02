@@ -1,12 +1,10 @@
 const Hotel = require('../models/Hotel');
 const Booking = require('../models/booking');
-
 // @desc    GET all hotels
 // @route   GET /api/v1/hotels
 // @access  Public
 exports.getHotels = async (req, res, next) => {
   const reqQuery = { ...req.query };
-
   const removeFields = ['select', 'sort', 'page', 'limit'];
   removeFields.forEach(param => delete reqQuery[param]);
 
@@ -112,8 +110,6 @@ exports.deleteHotel = async (req, res, next) => {
         message: `Hotel not found with id ${req.params.id}`
       });
     }
-
-
     await Booking.deleteMany({ hotel: req.params.id });
 
     await hotel.deleteOne();

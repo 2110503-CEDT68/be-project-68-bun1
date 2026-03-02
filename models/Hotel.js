@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const HotelSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -36,7 +35,6 @@ const HotelSchema = new mongoose.Schema({
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
-
 
 HotelSchema.virtual('bookings', {
   ref: 'Booking',

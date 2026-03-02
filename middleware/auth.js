@@ -1,11 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-
 exports.protect = async (req, res, next) => {
   let token;
-
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -42,7 +39,6 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-
 exports.authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user) {
@@ -51,14 +47,12 @@ exports.authorize = (...roles) => {
         message: "Not authorized"
       });
     }
-
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
         message: "User role not authorized"
       });
     }
-
     next();
   };
 };
