@@ -1,5 +1,6 @@
 # Hotel Booking System - Backend API
-(most of the commit is at PP branch, we poush force at the last minmute desicion)
+(most of the commit is at PP branch, we poush force at the last minnute decision, therefore github contributors maybe not accurate (cuz it count only main branch))
+(please look at the PP branch )
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/_xCBcc1c)
 
 ## 📋 Project Overview
