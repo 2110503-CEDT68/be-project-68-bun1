@@ -1,21 +1,25 @@
 const express = require('express');
-const { register, login, getMe, logout, updateUserRole } = require('../controllers/Auth');
+const {
+  register,
+  login,
+  getMe,
+  logout,
+  updateUserRole
+} = require('../controllers/Auth');
+
 const { protect, authorize } = require('../middleware/auth');
 
 const router = express.Router();
-
-
 router.post('/register', register);
-
-
 router.post('/login', login);
-
-
 router.get('/me', protect, getMe);
-
-
 router.get('/logout', protect, logout);
 
-router.put('/users/:id/role', protect, authorize('admin'), updateUserRole);
+router.put(
+  '/users/:id/role',
+  protect,
+  authorize('admin'),
+  updateUserRole
+);
 
 module.exports = router;

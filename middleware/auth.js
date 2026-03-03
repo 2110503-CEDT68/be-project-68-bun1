@@ -1,62 +1,74 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-// 🔐 Protect routes (ต้อง login ก่อน)
+
+/* =====================================
+   🔐 PROTECT ROUTES
+===================================== */
 exports.protect = async (req, res, next) => {
   let token;
 
-  // เช็ค header Authorization
+  // ดึง token จาก header
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(' ')[1];
   }
 
   if (!token) {
     return res.status(401).json({
       success: false,
-      message: "Not authorized, no token"
+      message: 'Not authorized'
     });
   }
 
   try {
-    // verify token
+    // verify JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // เอา user จาก DB
-    req.user = await User.findById(decoded.id);
+    // ดึง user + currentToken
+    const user = await User.findById(decoded.id)
+      .select('+currentToken');
 
-    if (!req.user) {
+    // เช็คว่ามี user และ token ตรงกับใน DB ไหม
+    if (!user || user.currentToken !== token) {
       return res.status(401).json({
         success: false,
-        message: "User not found"
+        message: 'Not authorized'
       });
     }
 
+    req.user = user;
+
     next();
+
   } catch (err) {
     return res.status(401).json({
       success: false,
-      message: "Not authorized"
+      message: 'Not authorized'
     });
   }
 };
 
-// 🔒 Authorize roles (ต้องเป็น role ที่กำหนด)
+
+/* =====================================
+   🔒 AUTHORIZE ROLES
+===================================== */
 exports.authorize = (...roles) => {
   return (req, res, next) => {
+
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        message: "Not authorized"
+        message: 'Not authorized'
       });
     }
 
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: "User role not authorized"
+        message: `Role ${req.user.role} is not allowed`
       });
     }
 

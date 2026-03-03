@@ -17,13 +17,29 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Login admin - status 200', function () {",
+                  "pm.test(\"Login admin - status 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
                   "",
                   "const jsonData = pm.response.json();",
-                  "pm.environment.set(\"TOKEN\", jsonData.token);",
-                  "pm.environment.set(\"Admin\", jsonData.token);"
+                  "",
+                  "if (pm.environment.get(\"User\")) {",
+                  "    throw new Error(\"User is already logged in. Logout first.\");",
+                  "}",
+                  "",
+                  "if (pm.environment.get(\"Admin\")) {",
+                  "    throw new Error(\"Admin already logged in.\");",
+                  "}",
+                  "",
+                  "if (jsonData.data.role !== \"admin\") {",
+                  "    throw new Error(\"This account is NOT admin.\");",
+                  "}",
+                  "",
+                  "pm.environment.set(\"Admin\", jsonData.token);",
+                  "",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -68,14 +84,26 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Register user - status 201', function () {",
-                  "    pm.response.to.have.status(201);",
+                  "pm.test(\"Register user - status 201\", function () {",
+                  "    pm.response.to.have.status(200);",
                   "});",
-                  "var jsonData = pm.response.json();",
-                  "pm.collectionVariables.set('User', jsonData.token);",
-                  "pm.collectionVariables.set('user_id', jsonData.data._id);",
-                  "pm.environment.set(\"TOKEN\", jsonData.token);",
-                  "pm.environment.set(\"User\", jsonData.token);"
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"email\", jsonData.data.email);",
+                  "    console.log(\"Saved new email:\", jsonData.data.email);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -114,6 +142,73 @@
           "response": []
         },
         {
+          "name": "Login user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login user - status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const jsonData = pm.response.json();",
+                  "",
+                  "if (pm.environment.get(\"Admin\")) {",
+                  "    throw new Error(\"Admin is already logged in. Logout first.\");",
+                  "}",
+                  "",
+                  "if (pm.environment.get(\"User\")) {",
+                  "    throw new Error(\"User already logged in.\");",
+                  "}",
+                  "",
+                  "if (jsonData.data.role !== \"user\") {",
+                  "    throw new Error(\"This account is NOT user.\");",
+                  "}",
+                  "",
+                  "pm.environment.set(\"User\", jsonData.token);",
+                  "",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{email}}\",\n    //\"email\" : \"ray.greenfelder14@yahoo.com\",\n    //\"email\": \"admin@gmail.com\",\n    \"password\": \"12345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}/api/v1/auth/login",
+              "host": [
+                "{{URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "GET me",
           "event": [
             {
@@ -142,7 +237,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{TOKEN}}",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -171,19 +266,38 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Register second user - status 201', function () {",
-                  "    pm.response.to.have.status(201);",
+                  "pm.test(\"Register second user - status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
                   "});",
-                  "var jsonData = pm.response.json();",
-                  "pm.collectionVariables.set('second_user_id', jsonData.data._id);"
+                  "",
+                  "pm.test(\"Register second user - save id\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "",
+                  "    if (!jsonData.data || !jsonData.data.id) {",
+                  "        throw new Error(\"User ID not found in response\");",
+                  "    }",
+                  "",
+                  "    pm.collectionVariables.set(\"second_user_id\", jsonData.data.id);",
+                  "",
+                  "    console.log(\"Saved second_user_id:\", jsonData.data.id);",
+                  "});"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
             "auth": {
-              "type": "noauth"
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [],
@@ -973,7 +1087,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{TOKEN}}",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1121,6 +1235,14 @@
     },
     {
       "key": "booking_id",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "token",
       "value": ""
     }
   ]
